@@ -6,12 +6,9 @@ import { ModalWindow } from "./Modal/Modal"
 export class App extends Component {
   state = {
     showModal: false,
+    hasError: false,
   }
 
-
-//   componentDidMount() {
-// console.log('App componentDidMount')
-//   }
 
 
 //   componentDidUpdate(prevProps,prevState) {
@@ -20,9 +17,6 @@ export class App extends Component {
 //     console.log(prevState)
 //   }
 
-//   componentWillUnmount() {
-//     console.log('App componentWillUnmount')
-//   }
 
   //* Рідше використовуються
 
@@ -38,15 +32,31 @@ export class App extends Component {
   //   //? Виколикається після render()
   // }
 
-  
-  toggleModal = ({showModal}) => {
+
+  componentDidCatch(error, info) {
+    
     this.setState({
-      showModal: !showModal
-      })
+      hasError: true,
+    })
+  //   ? Ловить помилки лише у дітей, але не в самому батьку
+  
+  //   *error -  результат toString() об'єкта помилки
+  // * info - об'єкт, що описує stack trace
+  }
+
+  
+  toggleModal = () => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+    }))
   }
 
 
   render() {
+
+    if (this.state.hasError) {
+      return <h1>Something went wrong, please try again later :</h1>
+    }
 
     const {showModal} = this.state
 
@@ -56,11 +66,11 @@ export class App extends Component {
       <button type="button" onClick={this.toggleModal}>Show modal</button>
 
         {showModal && (
-          <ModalWindow>
-          <h1>This is a content modal window as a children</h1>
+          <ModalWindow closeModal={this.toggleModal}>
+          <h2>This is a content modal window as a children</h2>
           <p>
             Research and confirm brands that present the strongest digital growth opportunities and minimize risk.
-            Our goal is to identify the business problem to walk away with the perfect and creative solution.
+            Our goal is to ident ify the business problem to walk away with the perfect and creative solution.
             Bring the key message to the brand's audience for the best price within the shortest possible time
             Design practice focused on digital experiences. We bring forth a deep passion for problem-solving
           </p>
